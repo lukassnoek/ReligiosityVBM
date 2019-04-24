@@ -6,3 +6,6 @@ Our registered report (with an IPA from the European Journal of Neuroscience) ca
 
 ## Neurovault
 Untresholded brain maps containing the results from the whole-brain analysis of gender (outcome neutral test) and religiosity/mystical experiences (main test) can be viewed and downloaded from [neurovault](https://neurovault.org/collections/JNUVCKVO/).
+
+## Anonymity
+The subject-IDs (sub-xxxx) have been shuffled, so e.g. data corresponding to sub-0001 does not represent data from the first subject. 
