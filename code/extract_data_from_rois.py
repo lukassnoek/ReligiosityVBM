@@ -15,15 +15,15 @@ df_cov = pd.read_csv('../privacy_sensitive_data/PREDICTORS.tsv', sep='\t', index
 df = pd.DataFrame()
 for roi in tqdm(rois, desc='Looping across ROIs'):
 
-    for ext in ['bin', 'prob']:
+    for ext in ['bin']:#['bin', 'prob']:
         roi_path = f'../rois/{roi}_{ext}.nii.gz'
         mask = nib.load(roi_path).get_data()
         if ext == 'bin':
             vals = vbm[mask.astype(bool), :].mean(axis=0)
         else:
             vals = (vbm * mask[..., np.newaxis]).mean(axis=(0, 1, 2))
-
-        df[f'{roi}_{ext}'] = vals
+        df[roi] = vals
+        #df[f'{roi}_{ext}'] = vals
 
 df.index = df_cov.index
 df_all = pd.concat((df_cov, df), axis=1)

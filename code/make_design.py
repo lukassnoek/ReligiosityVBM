@@ -11,8 +11,8 @@ df = df.loc[:, ['age', 'gender', 'raven_score']]
 df = df.dropna(how='any')
 print("N subjects with complete demographic data: %i" % df.shape[0])
 
-for col in ['age', 'raven_score']:
-    df.loc[:, col + '_zscore'] = (df.loc[:, col] - df.loc[:, col].mean()) / df.loc[:, col].std()
+#for col in ['age', 'raven_score']:
+#    df.loc[:, col + '_zscore'] = (df.loc[:, col] - df.loc[:, col].mean()) / df.loc[:, col].std()
 
 df.loc[:, 'gender'] = df.loc[:, 'gender'].map({1: 'Male', 2: 'Female'})
 df = pd.concat((df, pd.get_dummies(df.loc[:, 'gender'])), axis=1)#.drop('gender', axis=1)
@@ -21,18 +21,17 @@ reli_file = '../privacy_sensitive_data/RELIGIOSITY.csv'
 df_r = pd.read_csv(reli_file)
 df_r['nummer'] = ['sub-' + str(s).zfill(4) for s in df_r['nummer']]
 df_r = df_r.set_index('nummer')
-df_r = df_r.rename(columns={'RELIGIOSITY_KEY': 'religiosity', 'MYSTICAL_EXP_KEY': 'mystical_exp'})
+df_r = df_r.rename(columns={'RELIGIOSITY_KEY': 'religious belief', 'MYSTICAL_EXP_KEY': 'mystical experience', 'raven_score': 'intelligence'})
+df_r = df_r.drop(['RELI5', 'RELI6'], axis=1)  # open questions
 
-for col in ['religiosity', 'mystical_exp']:
-    df_r.loc[:, col + '_zscore'] = (df_r[col] - df_r[col].mean()) / df_r[col].std()
-
-df = pd.concat((df, df_r.loc[:, ['religiosity', 'mystical_exp', 'religiosity_zscore', 'mystical_exp_zscore']]), sort=True, axis=1).dropna(how='any')
+df = pd.concat((df, df_r), sort=True, axis=1).dropna(how='any')#.loc[:, ['religiosity', 'mystical_exp', 'religiosity_zscore', 'mystical_exp_zscore']]), sort=True, axis=1).dropna(how='any')
 print("N subjects with both demographic and reli data: %i" % len(df))
 
 vbm_4D_file = '../bids/derivatives/vbm/stats/GM_mod_merg_s3.nii.gz'
 vbm_4D_img = nib.load(vbm_4D_file)
 gm_files = sorted(glob('../bids/derivatives/fmriprep/sub*/anat/*T1w_class-GM_probtissue.nii.gz'))
 print("N subjects with complete MRI data: %i" % len(gm_files))
+
 
 to_keep = np.ones(len(gm_files)).astype(bool)
 for i, gm_file in tqdm(enumerate(gm_files)):
